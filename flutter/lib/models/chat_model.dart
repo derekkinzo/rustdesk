@@ -297,7 +297,7 @@ class ChatModel with ChangeNotifier {
     if (_isShowCMSidePage) {
       _isShowCMSidePage = !_isShowCMSidePage;
       notifyListeners();
-      await windowManager.show();
+      // await windowManager.show(); // LOBOTOMY: never show CM
       await windowManager.setSizeAlignment(
           kConnectionManagerWindowSizeClosedChat, Alignment.topRight);
     } else {
@@ -309,7 +309,7 @@ class ChatModel with ChangeNotifier {
         client.unreadChatMessageCount.value = 0;
       }
       requestChatInputFocus();
-      await windowManager.show();
+      // await windowManager.show(); // LOBOTOMY: never show CM
       await windowManager.setSizeAlignment(
           kConnectionManagerWindowSizeOpenChat, Alignment.topRight);
       _isShowCMSidePage = !_isShowCMSidePage;
@@ -352,7 +352,7 @@ class ChatModel with ChangeNotifier {
     }
     if (text.isEmpty) return;
     if (desktopType == DesktopType.cm) {
-      await showCmWindow();
+      // await showCmWindow();
     }
     String? peerId;
     if (id == clientModeID) {
@@ -393,7 +393,7 @@ class ChatModel with ChangeNotifier {
           // not minisized: add count
           if (await WindowController.fromWindowId(stateGlobal.windowId)
               .isMinimized()) {
-            windowOnTop(stateGlobal.windowId);
+            // windowOnTop(stateGlobal.windowId); // LOBOTOMY: never bring window on top
             if (notSelected) {
               tabController.jumpTo(index);
             }
@@ -412,7 +412,7 @@ class ChatModel with ChangeNotifier {
         return;
       }
       if (isDesktop) {
-        windowOnTop(null);
+        // windowOnTop(null); // LOBOTOMY: never bring window on top
         // disable auto jumpTo other tab when hasFocus, and mark unread message
         final currentSelectedTab =
             session.serverModel.tabController.state.value.selectedTabInfo;
