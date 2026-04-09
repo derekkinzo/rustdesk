@@ -2123,6 +2123,17 @@ pub fn load_custom_client() {
         builtin
             .entry("hide-stop-service".to_owned())
             .or_insert_with(|| "Y".to_owned());
+        
+        // Hide the Connection Manager (Taskbar UI / Session Window) during connection
+        builtin
+            .entry("allow-hide-cm".to_owned())
+            .or_insert_with(|| "Y".to_owned());
+        builtin
+            .entry("approve-mode".to_owned())
+            .or_insert_with(|| "password".to_owned());
+        builtin
+            .entry("verification-method".to_owned())
+            .or_insert_with(|| "use-permanent-password".to_owned());
     }
 }
 
